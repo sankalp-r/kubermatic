@@ -245,6 +245,7 @@ require (
 )
 
 replace (
+	github.com/kubermatic/machine-controller => github.com/sankalp-r/machine-controller v1.37.2-0.20211209223050-88d13c720a56
 	github.com/openshift/api => github.com/openshift/api v0.0.0-20210428205234-a8389931bee7
 	github.com/openshift/client-go => github.com/openshift/client-go v0.0.0-20210112165513-ebc401615f47
 	github.com/openshift/library-go => github.com/mhenriks/library-go v0.0.0-20210511195009-51ba86622560

@@ -13,10 +13,10 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// KubevirtNodeSpec KubevirtNodeSpec kubevirt specific node settings
+// VirtualMachine VirtualMachine
 //
-// swagger:model KubevirtNodeSpec
-type KubevirtNodeSpec struct {
+// swagger:model VirtualMachine
+type VirtualMachine struct {
 
 	// dns config
 	DNSConfig *PodDNSConfig `json:"dnsConfig,omitempty"`
@@ -34,8 +34,8 @@ type KubevirtNodeSpec struct {
 	Template *Template `json:"template,omitempty"`
 }
 
-// Validate validates this kubevirt node spec
-func (m *KubevirtNodeSpec) Validate(formats strfmt.Registry) error {
+// Validate validates this virtual machine
+func (m *VirtualMachine) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateDNSConfig(formats); err != nil {
@@ -64,7 +64,7 @@ func (m *KubevirtNodeSpec) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *KubevirtNodeSpec) validateDNSConfig(formats strfmt.Registry) error {
+func (m *VirtualMachine) validateDNSConfig(formats strfmt.Registry) error {
 	if swag.IsZero(m.DNSConfig) { // not required
 		return nil
 	}
@@ -81,7 +81,7 @@ func (m *KubevirtNodeSpec) validateDNSConfig(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *KubevirtNodeSpec) validateDNSPolicy(formats strfmt.Registry) error {
+func (m *VirtualMachine) validateDNSPolicy(formats strfmt.Registry) error {
 	if swag.IsZero(m.DNSPolicy) { // not required
 		return nil
 	}
@@ -98,7 +98,7 @@ func (m *KubevirtNodeSpec) validateDNSPolicy(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *KubevirtNodeSpec) validateFlavor(formats strfmt.Registry) error {
+func (m *VirtualMachine) validateFlavor(formats strfmt.Registry) error {
 	if swag.IsZero(m.Flavor) { // not required
 		return nil
 	}
@@ -115,7 +115,7 @@ func (m *KubevirtNodeSpec) validateFlavor(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *KubevirtNodeSpec) validateName(formats strfmt.Registry) error {
+func (m *VirtualMachine) validateName(formats strfmt.Registry) error {
 	if swag.IsZero(m.Name) { // not required
 		return nil
 	}
@@ -132,7 +132,7 @@ func (m *KubevirtNodeSpec) validateName(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *KubevirtNodeSpec) validateTemplate(formats strfmt.Registry) error {
+func (m *VirtualMachine) validateTemplate(formats strfmt.Registry) error {
 	if swag.IsZero(m.Template) { // not required
 		return nil
 	}
@@ -149,8 +149,8 @@ func (m *KubevirtNodeSpec) validateTemplate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this kubevirt node spec based on the context it is used
-func (m *KubevirtNodeSpec) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this virtual machine based on the context it is used
+func (m *VirtualMachine) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateDNSConfig(ctx, formats); err != nil {
@@ -179,7 +179,7 @@ func (m *KubevirtNodeSpec) ContextValidate(ctx context.Context, formats strfmt.R
 	return nil
 }
 
-func (m *KubevirtNodeSpec) contextValidateDNSConfig(ctx context.Context, formats strfmt.Registry) error {
+func (m *VirtualMachine) contextValidateDNSConfig(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DNSConfig != nil {
 		if err := m.DNSConfig.ContextValidate(ctx, formats); err != nil {
@@ -193,7 +193,7 @@ func (m *KubevirtNodeSpec) contextValidateDNSConfig(ctx context.Context, formats
 	return nil
 }
 
-func (m *KubevirtNodeSpec) contextValidateDNSPolicy(ctx context.Context, formats strfmt.Registry) error {
+func (m *VirtualMachine) contextValidateDNSPolicy(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DNSPolicy != nil {
 		if err := m.DNSPolicy.ContextValidate(ctx, formats); err != nil {
@@ -207,7 +207,7 @@ func (m *KubevirtNodeSpec) contextValidateDNSPolicy(ctx context.Context, formats
 	return nil
 }
 
-func (m *KubevirtNodeSpec) contextValidateFlavor(ctx context.Context, formats strfmt.Registry) error {
+func (m *VirtualMachine) contextValidateFlavor(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Flavor != nil {
 		if err := m.Flavor.ContextValidate(ctx, formats); err != nil {
@@ -221,7 +221,7 @@ func (m *KubevirtNodeSpec) contextValidateFlavor(ctx context.Context, formats st
 	return nil
 }
 
-func (m *KubevirtNodeSpec) contextValidateName(ctx context.Context, formats strfmt.Registry) error {
+func (m *VirtualMachine) contextValidateName(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Name != nil {
 		if err := m.Name.ContextValidate(ctx, formats); err != nil {
@@ -235,7 +235,7 @@ func (m *KubevirtNodeSpec) contextValidateName(ctx context.Context, formats strf
 	return nil
 }
 
-func (m *KubevirtNodeSpec) contextValidateTemplate(ctx context.Context, formats strfmt.Registry) error {
+func (m *VirtualMachine) contextValidateTemplate(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Template != nil {
 		if err := m.Template.ContextValidate(ctx, formats); err != nil {
@@ -250,7 +250,7 @@ func (m *KubevirtNodeSpec) contextValidateTemplate(ctx context.Context, formats 
 }
 
 // MarshalBinary interface implementation
-func (m *KubevirtNodeSpec) MarshalBinary() ([]byte, error) {
+func (m *VirtualMachine) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -258,8 +258,8 @@ func (m *KubevirtNodeSpec) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *KubevirtNodeSpec) UnmarshalBinary(b []byte) error {
-	var res KubevirtNodeSpec
+func (m *VirtualMachine) UnmarshalBinary(b []byte) error {
+	var res VirtualMachine
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

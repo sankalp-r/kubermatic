@@ -19664,6 +19664,22 @@
       "type": "string",
       "x-go-package": "k8s.io/api/core/v1"
     },
+    "ConfigVarString": {
+      "type": "object",
+      "properties": {
+        "configMapKeyRef": {
+          "$ref": "#/definitions/GlobalConfigMapKeySelector"
+        },
+        "secretKeyRef": {
+          "$ref": "#/definitions/GlobalSecretKeySelector"
+        },
+        "value": {
+          "type": "string",
+          "x-go-name": "Value"
+        }
+      },
+      "x-go-package": "github.com/kubermatic/machine-controller/pkg/providerconfig/types"
+    },
     "Constraint": {
       "description": "Constraint represents a gatekeeper Constraint",
       "type": "object",
@@ -20443,6 +20459,19 @@
       },
       "x-go-package": "k8c.io/kubermatic/v2/pkg/api/v1"
     },
+    "Disk": {
+      "description": "Disk",
+      "type": "object",
+      "properties": {
+        "size": {
+          "$ref": "#/definitions/ConfigVarString"
+        },
+        "storageClassName": {
+          "$ref": "#/definitions/ConfigVarString"
+        }
+      },
+      "x-go-package": "github.com/kubermatic/machine-controller/pkg/cloudprovider/provider/kubevirt/types"
+    },
     "EKSCloudSpec": {
       "type": "object",
       "properties": {
@@ -21082,6 +21111,19 @@
       },
       "x-go-package": "k8c.io/kubermatic/v2/pkg/api/v1"
     },
+    "Flavor": {
+      "description": "Flavor",
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/ConfigVarString"
+        },
+        "profile": {
+          "$ref": "#/definitions/ConfigVarString"
+        }
+      },
+      "x-go-package": "github.com/kubermatic/machine-controller/pkg/cloudprovider/provider/kubevirt/types"
+    },
     "GCPCloudSpec": {
       "type": "object",
       "title": "GCPCloudSpec specifies access data to GCP.",
@@ -21583,6 +21625,9 @@
         }
       },
       "x-go-package": "k8c.io/kubermatic/v2/pkg/api/v2"
+    },
+    "GlobalConfigMapKeySelector": {
+      "$ref": "#/definitions/GlobalObjectKeySelector"
     },
     "GlobalCustomLinks": {
       "description": "GlobalCustomLinks defines custom links for global settings",
@@ -22107,44 +22152,21 @@
     "KubevirtNodeSpec": {
       "description": "KubevirtNodeSpec kubevirt specific node settings",
       "type": "object",
-      "required": [
-        "cpus",
-        "memory",
-        "namespace",
-        "sourceURL",
-        "storageClassName",
-        "pvcSize"
-      ],
       "properties": {
-        "cpus": {
-          "description": "CPUs states how many cpus the kubevirt node will have.",
-          "type": "string",
-          "x-go-name": "CPUs"
+        "dnsConfig": {
+          "$ref": "#/definitions/PodDNSConfig"
         },
-        "memory": {
-          "description": "Memory states the memory that kubevirt node will have.",
-          "type": "string",
-          "x-go-name": "Memory"
+        "dnsPolicy": {
+          "$ref": "#/definitions/ConfigVarString"
         },
-        "namespace": {
-          "description": "Namespace states in which namespace kubevirt node will be provisioned.",
-          "type": "string",
-          "x-go-name": "Namespace"
+        "flavor": {
+          "$ref": "#/definitions/Flavor"
         },
-        "pvcSize": {
-          "description": "PVCSize states the size of the provisioned pvc per node.",
-          "type": "string",
-          "x-go-name": "PVCSize"
+        "name": {
+          "$ref": "#/definitions/ConfigVarString"
         },
-        "sourceURL": {
-          "description": "SourceURL states the url from which the imported image will be downloaded.",
-          "type": "string",
-          "x-go-name": "SourceURL"
-        },
-        "storageClassName": {
-          "description": "StorageClassName states the storage class name for the provisioned PVCs.",
-          "type": "string",
-          "x-go-name": "StorageClassName"
+        "template": {
+          "$ref": "#/definitions/Template"
         }
       },
       "x-go-package": "k8c.io/kubermatic/v2/pkg/api/v1"
@@ -23849,6 +23871,22 @@
       },
       "x-go-package": "k8c.io/kubermatic/v2/pkg/api/v2"
     },
+    "PrimaryDisk": {
+      "description": "PrimaryDisk",
+      "type": "object",
+      "properties": {
+        "osImageURL": {
+          "$ref": "#/definitions/ConfigVarString"
+        },
+        "size": {
+          "$ref": "#/definitions/ConfigVarString"
+        },
+        "storageClassName": {
+          "$ref": "#/definitions/ConfigVarString"
+        }
+      },
+      "x-go-package": "github.com/kubermatic/machine-controller/pkg/cloudprovider/provider/kubevirt/types"
+    },
     "Project": {
       "description": "Project is a top-level container for a set of resources",
       "type": "object",
@@ -24448,6 +24486,19 @@
       },
       "x-go-package": "k8c.io/kubermatic/v2/pkg/api/v1"
     },
+    "SecondaryDisks": {
+      "description": "SecondaryDisks",
+      "type": "object",
+      "properties": {
+        "size": {
+          "$ref": "#/definitions/ConfigVarString"
+        },
+        "storageClassName": {
+          "$ref": "#/definitions/ConfigVarString"
+        }
+      },
+      "x-go-package": "github.com/kubermatic/machine-controller/pkg/cloudprovider/provider/kubevirt/types"
+    },
     "SecretReference": {
       "description": "SecretReference represents a Secret Reference. It has enough information to retrieve secret\nin any namespace\n+structType=atomic",
       "type": "object",
@@ -24896,6 +24947,29 @@
       },
       "x-go-package": "github.com/open-policy-agent/frameworks/constraint/pkg/apis/templates/v1beta1"
     },
+    "Template": {
+      "description": "Template",
+      "type": "object",
+      "properties": {
+        "cpus": {
+          "$ref": "#/definitions/ConfigVarString"
+        },
+        "memory": {
+          "$ref": "#/definitions/ConfigVarString"
+        },
+        "primaryDisk": {
+          "$ref": "#/definitions/PrimaryDisk"
+        },
+        "secondaryDisks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SecondaryDisks"
+          },
+          "x-go-name": "SecondaryDisks"
+        }
+      },
+      "x-go-package": "github.com/kubermatic/machine-controller/pkg/cloudprovider/provider/kubevirt/types"
+    },
     "Time": {
       "description": "Programs using times should typically store and pass them as values,\nnot pointers. That is, time variables and struct fields should be of\ntype time.Time, not *time.Time.\n\nA Time value can be used by multiple goroutines simultaneously except\nthat the methods GobDecode, UnmarshalBinary, UnmarshalJSON and\nUnmarshalText are not concurrency-safe.\n\nTime instants can be compared using the Before, After, and Equal methods.\nThe Sub method subtracts two instants, producing a Duration.\nThe Add method adds a Time and a Duration, producing a Time.\n\nThe zero value of type Time is January 1, year 1, 00:00:00.000000000 UTC.\nAs this time is unlikely to come up in practice, the IsZero method gives\na simple way of detecting a time that has not been initialized explicitly.\n\nEach Time has associated with it a Location, consulted when computing the\npresentation form of the time, such as in the Format, Hour, and Year methods.\nThe methods Local, UTC, and In return a Time with a specific location.\nChanging the location in this way changes only the presentation; it does not\nchange the instant in time being denoted and therefore does not affect the\ncomputations described in earlier paragraphs.\n\nRepresentations of a Time value saved by the GobEncode, MarshalBinary,\nMarshalJSON, and MarshalText methods store the Time.Location's offset, but not\nthe location name. They therefore lose information about Daylight Saving Time.\n\nIn addition to the required “wall clock” reading, a Time may contain an optional\nreading of the current process's monotonic clock, to provide additional precision\nfor comparison or subtraction.\nSee the “Monotonic Clocks” section in the package documentation for details.\n\nNote that the Go == operator compares not just the time instant but also the\nLocation and the monotonic clock reading. Therefore, Time values should not\nbe used as map or database keys without first guaranteeing that the\nidentical Location has been set for all values, which can be achieved\nthrough use of the UTC or Local method, and that the monotonic clock reading\nhas been stripped by setting t = t.Round(0). In general, prefer t.Equal(u)\nto t == u, since t.Equal uses the most accurate comparison available and\ncorrectly handles the case when only one of its arguments has a monotonic\nclock reading.",
       "type": "string",
@@ -25250,6 +25324,28 @@
         }
       },
       "x-go-package": "k8c.io/kubermatic/v2/pkg/api/v2"
+    },
+    "VirtualMachine": {
+      "description": "VirtualMachine",
+      "type": "object",
+      "properties": {
+        "dnsConfig": {
+          "$ref": "#/definitions/PodDNSConfig"
+        },
+        "dnsPolicy": {
+          "$ref": "#/definitions/ConfigVarString"
+        },
+        "flavor": {
+          "$ref": "#/definitions/Flavor"
+        },
+        "name": {
+          "$ref": "#/definitions/ConfigVarString"
+        },
+        "template": {
+          "$ref": "#/definitions/Template"
+        }
+      },
+      "x-go-package": "github.com/kubermatic/machine-controller/pkg/cloudprovider/provider/kubevirt/types"
     },
     "bcBody": {
       "type": "object",

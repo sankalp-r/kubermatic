@@ -19,6 +19,7 @@ package v1
 import (
 	"encoding/json"
 	"fmt"
+	kubevirt "github.com/kubermatic/machine-controller/pkg/cloudprovider/provider/kubevirt/types"
 	"strings"
 	"time"
 
@@ -1708,50 +1709,35 @@ func (spec *GCPNodeSpec) MarshalJSON() ([]byte, error) {
 // KubevirtNodeSpec kubevirt specific node settings
 // swagger:model KubevirtNodeSpec
 type KubevirtNodeSpec struct {
-	// CPUs states how many cpus the kubevirt node will have.
-	// required: true
-	CPUs string `json:"cpus"`
-	// Memory states the memory that kubevirt node will have.
-	// required: true
-	Memory string `json:"memory"`
-	// Namespace states in which namespace kubevirt node will be provisioned.
-	// required: true
-	Namespace string `json:"namespace"`
-	// SourceURL states the url from which the imported image will be downloaded.
-	// required: true
-	SourceURL string `json:"sourceURL"`
-	// StorageClassName states the storage class name for the provisioned PVCs.
-	// required: true
-	StorageClassName string `json:"storageClassName"`
-	// PVCSize states the size of the provisioned pvc per node.
-	// required: true
-	PVCSize string `json:"pvcSize"`
+	kubevirt.VirtualMachine `json:",inline"`
 }
 
 func (spec *KubevirtNodeSpec) MarshalJSON() ([]byte, error) {
 	missing := make([]string, 0)
 
-	if len(spec.CPUs) == 0 {
-		missing = append(missing, "cpus")
+	if len(spec.Name.Value) == 0 {
+		missing = append(missing, "name")
 	}
 
-	if len(spec.Memory) == 0 {
-		missing = append(missing, "memory")
+	if spec.Flavor.Name.Value == "" {
+		if len(spec.Template.CPUs.Value) == 0 {
+			missing = append(missing, "cpus")
+		}
+
+		if len(spec.Template.Memory.Value) == 0 {
+			missing = append(missing, "memory")
+		}
 	}
 
-	if len(spec.Namespace) == 0 {
-		missing = append(missing, "namespace")
-	}
-
-	if len(spec.SourceURL) == 0 {
+	if len(spec.Template.PrimaryDisk.OsImageURL.Value) == 0 {
 		missing = append(missing, "sourceURL")
 	}
 
-	if len(spec.StorageClassName) == 0 {
+	if len(spec.Template.PrimaryDisk.StorageClassName.Value) == 0 {
 		missing = append(missing, "storageClassName")
 	}
 
-	if len(spec.PVCSize) == 0 {
+	if len(spec.Template.PrimaryDisk.Size.Value) == 0 {
 		missing = append(missing, "pvcSize")
 	}
 
@@ -1760,19 +1746,9 @@ func (spec *KubevirtNodeSpec) MarshalJSON() ([]byte, error) {
 	}
 
 	res := struct {
-		CPUs             string `json:"cpus"`
-		Memory           string `json:"memory"`
-		Namespace        string `json:"namespace"`
-		SourceURL        string `json:"sourceURL"`
-		StorageClassName string `json:"storageClassName"`
-		PVCSize          string `json:"pvcSize"`
+		kubevirt.VirtualMachine
 	}{
-		CPUs:             spec.CPUs,
-		Memory:           spec.Memory,
-		Namespace:        spec.Namespace,
-		SourceURL:        spec.SourceURL,
-		StorageClassName: spec.StorageClassName,
-		PVCSize:          spec.PVCSize,
+		spec.VirtualMachine,
 	}
 
 	return json.Marshal(&res)

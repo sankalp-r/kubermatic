@@ -100,12 +100,16 @@ func (s *kubevirtScenario) NodeDeployments(_ context.Context, num int, _ secrets
 				Template: &apimodels.NodeSpec{
 					Cloud: &apimodels.NodeCloudSpec{
 						Kubevirt: &apimodels.KubevirtNodeSpec{
-							Memory:           utilpointer.StringPtr("2Gi"),
-							Namespace:        utilpointer.StringPtr("kube-system"),
-							SourceURL:        utilpointer.StringPtr(sourceURL),
-							StorageClassName: utilpointer.StringPtr("local-path"),
-							PVCSize:          utilpointer.StringPtr("25Gi"),
-							CPUs:             utilpointer.StringPtr("2"),
+							Name: &apimodels.ConfigVarString{Value: "kubevirt-node"},
+							Template: &apimodels.Template{
+								Cpus:   &apimodels.ConfigVarString{Value: "2"},
+								Memory: &apimodels.ConfigVarString{Value: "2Gi"},
+								PrimaryDisk: &apimodels.PrimaryDisk{
+									OsImageURL:       &apimodels.ConfigVarString{Value: sourceURL},
+									Size:             &apimodels.ConfigVarString{Value: "25Gi"},
+									StorageClassName: &apimodels.ConfigVarString{Value: "local-path"},
+								},
+							},
 						},
 					},
 					Versions: &apimodels.NodeVersionInfo{

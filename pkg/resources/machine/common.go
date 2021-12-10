@@ -383,15 +383,29 @@ func getGCPProviderSpec(c *kubermaticv1.Cluster, nodeSpec apiv1.NodeSpec, dc *ku
 
 func getKubevirtProviderSpec(nodeSpec apiv1.NodeSpec, dc *kubermaticv1.Datacenter) (*runtime.RawExtension, error) {
 	config := kubevirt.RawConfig{
-		CPUs:             providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.CPUs},
-		PVCSize:          providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.PVCSize},
-		StorageClassName: providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.StorageClassName},
-		SourceURL:        providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.SourceURL},
-		Namespace:        providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Namespace},
-		Memory:           providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Memory},
-		DNSPolicy:        providerconfig.ConfigVarString{Value: dc.Spec.Kubevirt.DNSPolicy},
-		DNSConfig:        dc.Spec.Kubevirt.DNSConfig,
+		VirtualMachine: kubevirt.VirtualMachine{
+			Name: providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Name.Value},
+			Flavor: kubevirt.Flavor{
+				Name:    providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Flavor.Name.Value},
+				Profile: providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Flavor.Profile.Value},
+			},
+			Template: kubevirt.Template{
+				CPUs:   providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Template.CPUs.Value},
+				Memory: providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Template.Memory.Value},
+				PrimaryDisk: kubevirt.PrimaryDisk{
+					Disk: kubevirt.Disk{
+						Size:             providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Template.PrimaryDisk.Size.Value},
+						StorageClassName: providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Template.PrimaryDisk.StorageClassName.Value},
+					},
+					OsImageURL: providerconfig.ConfigVarString{Value: nodeSpec.Cloud.Kubevirt.Template.PrimaryDisk.OsImageURL.Value},
+				},
+				SecondaryDisks: make([]kubevirt.SecondaryDisks, len(nodeSpec.Cloud.Kubevirt.Template.SecondaryDisks)),
+			},
+			DNSPolicy: providerconfig.ConfigVarString{Value: dc.Spec.Kubevirt.DNSPolicy},
+			DNSConfig: dc.Spec.Kubevirt.DNSConfig.DeepCopy(),
+		},
 	}
+	copy(config.VirtualMachine.Template.SecondaryDisks, nodeSpec.Cloud.Kubevirt.Template.SecondaryDisks)
 
 	ext := &runtime.RawExtension{}
 	b, err := json.Marshal(config)

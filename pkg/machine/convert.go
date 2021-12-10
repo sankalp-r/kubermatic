@@ -245,13 +245,29 @@ func GetAPIV2NodeCloudSpec(machineSpec clusterv1alpha1.MachineSpec) (*apiv1.Node
 		}
 
 		cloudSpec.Kubevirt = &apiv1.KubevirtNodeSpec{
-			CPUs:             config.CPUs.Value,
-			Memory:           config.Memory.Value,
-			Namespace:        config.Namespace.Value,
-			SourceURL:        config.SourceURL.Value,
-			StorageClassName: config.StorageClassName.Value,
-			PVCSize:          config.PVCSize.Value,
+			kubevirt.VirtualMachine{
+				Name: providerconfig.ConfigVarString{Value: config.VirtualMachine.Name.Value},
+				Flavor: kubevirt.Flavor{
+					Name:    providerconfig.ConfigVarString{Value: config.VirtualMachine.Flavor.Name.Value},
+					Profile: providerconfig.ConfigVarString{Value: config.VirtualMachine.Flavor.Profile.Value},
+				},
+				Template: kubevirt.Template{
+					CPUs:   providerconfig.ConfigVarString{Value: config.VirtualMachine.Template.CPUs.Value},
+					Memory: providerconfig.ConfigVarString{Value: config.VirtualMachine.Template.Memory.Value},
+					PrimaryDisk: kubevirt.PrimaryDisk{
+						Disk: kubevirt.Disk{
+							Size:             providerconfig.ConfigVarString{Value: config.VirtualMachine.Template.PrimaryDisk.Size.Value},
+							StorageClassName: providerconfig.ConfigVarString{Value: config.VirtualMachine.Template.PrimaryDisk.StorageClassName.Value},
+						},
+						OsImageURL: providerconfig.ConfigVarString{Value: config.VirtualMachine.Template.PrimaryDisk.OsImageURL.Value},
+					},
+					SecondaryDisks: make([]kubevirt.SecondaryDisks, len(config.VirtualMachine.Template.SecondaryDisks)),
+				},
+				DNSPolicy: providerconfig.ConfigVarString{Value: config.VirtualMachine.DNSPolicy.Value},
+				DNSConfig: config.VirtualMachine.DNSConfig.DeepCopy(),
+			},
 		}
+		copy(cloudSpec.Kubevirt.Template.SecondaryDisks, config.VirtualMachine.Template.SecondaryDisks)
 	case providerconfig.CloudProviderAlibaba:
 		config := &alibaba.RawConfig{}
 		if err := json.Unmarshal(decodedProviderSpec.CloudProviderSpec.Raw, &config); err != nil {
