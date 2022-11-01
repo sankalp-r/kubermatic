@@ -677,6 +677,20 @@ type DatacenterSpecKubevirt struct {
 	// DNSConfig represents the DNS parameters of a pod. Parameters specified here will be merged to the generated DNS
 	// configuration based on DNSPolicy.
 	DNSConfig *corev1.PodDNSConfig `json:"dnsConfig,omitempty"`
+
+	// ImageSource represents the source for KubeVirt VM Disk-images.
+	ImageSource *ImageSource `json:"imageSource,omitempty"`
+}
+
+// ImageSource represents the source for downloading KubeVirt VM Disk-images.
+type ImageSource struct {
+	HTTP *HTTP `json:"http,omitempty"`
+}
+
+// HTTP source for KubeVirt VM images.
+type HTTP struct {
+	// URL for the HTTP source endpoint.
+	URL string `json:"url"`
 }
 
 // DatacenterSpecNutanix describes a Nutanix datacenter.

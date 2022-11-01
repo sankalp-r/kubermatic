@@ -242,6 +242,19 @@ spec:
                                   - Default
                                   - None
                                 type: string
+                              imageSource:
+                                description: ImageSource represents the source for KubeVirt VM Disk-images.
+                                properties:
+                                  http:
+                                    description: HTTP source for KubeVirt VM images.
+                                    properties:
+                                      url:
+                                        description: URL for the HTTP source endpoint.
+                                        type: string
+                                    required:
+                                      - url
+                                    type: object
+                                type: object
                             type: object
                           machineFlavorFilter:
                             description: MachineFlavorFilter is used to filter out allowed machine flavors based on the specified resource limits like CPU, Memory, and GPU etc.
